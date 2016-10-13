@@ -15,9 +15,7 @@
 var observer;
 
 if (typeof WebKitMutationObserver != 'function') {
-  console.error('This example extension requires MutationObservers. ' +
-                'Try the Chrome Canary build.');
-  return;
+  throw Error('PageMirror requires MutationObserver.');
 }
 
 chrome.extension.onConnect.addListener(function(port) {

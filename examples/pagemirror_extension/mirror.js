@@ -14,13 +14,9 @@
 
 window.addEventListener('DOMContentLoaded', function() {
   if (typeof WebKitMutationObserver !== 'function') {
-    var h1 = document.body.appendChild(document.createElement('h3'));
-    h1.textContent = 'This example requires Mutation Observers';
-
-    var a = document.body.appendChild(document.createElement('a'));
-    a.textContent = 'Try the Chrome Canary build';
-    a.href = 'http://tools.google.com/dlpage/chromesxs';
-    return;
+    var h3 = document.body.appendChild(document.createElement('h3'));
+    h3.textContent = 'PageMirror requires MutationObserver.';
+    throw Error('PageMirror requires MutationObserver.');
   }
 
   var tabId = Number(location.href.match(/\?tabId=([0-9]*$)/)[1]);
