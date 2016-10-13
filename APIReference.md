@@ -119,22 +119,22 @@ Summarize the changes to the presence and location of the elements matching the 
 
 | **Selector** | **Examples** |
 | :----------- | :----------- |
-| Type         | `“div”`, `“span”` |
-| Universal    |  `“*”`, `"*[foo]"` |
-| Class        | `“.myClass”`,  `“div.myClass”` |
-| ID           | `“#myId”`, `“div#myId”` |
-| Attribute    | `“[foo]”`, `“div[bar]”` |
-| Attribute value matches | `“div[baz=bat]”`, `“span[foo=’bar baz’]"` |
-| Attribute value matches white-space-separated substring | `“div[foo~=bar]”` |
-| Groupings    | `“div, span[foo], .myClass”` |
+| Type         | `"div"`, `"span"` |
+| Universal    |  `"*"`, `"*[foo]"` |
+| Class        | `".myClass"`,  `"div.myClass"` |
+| ID           | `"#myId"`, `"div#myId"` |
+| Attribute    | `"[foo]"`, `"div[bar]"` |
+| Attribute value matches | `"div[baz=bat]"`, `"span[foo=’bar baz’]"` |
+| Attribute value matches white-space-separated substring | `"div[foo~=bar]"` |
+| Groupings    | `"div, span[foo], .myClass"` |
 
 **Unsupported**
 
 | **Selector**    | **Examples** |
 | :-------------- | :----------- |
-| Pseudo-elements | `“div:first-child”`, `“a:hover”` |
-| Attribute = value-match | `“div[foo|=bar]”` |
-| Combinators     | `“div > span”`, `“div input”`, `“h1 + div”` |
+| Pseudo-elements | `"div:first-child"`, `"a:hover"` |
+| Attribute = value-match | `"div[foo|=bar]"` |
+| Combinators     | `"div > span"`, `"div input"`, `"h1 + div"` |
 
 ### Response ###
 

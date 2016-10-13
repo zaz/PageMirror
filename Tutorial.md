@@ -11,7 +11,7 @@ Other resources:
 Let’s start with a contrived use case that illustrates the basics of using Mutation Summary: An imaginary micro-format, called “hTweet”. The purpose of hTweet is so that page authors can annotate any section of their pages with a hash-tag that is most-likely relevant, like so:
 
 ```
-<span data-h-tweet=”#beiber”>Isn’t Justin dreamy?</span>
+<span data-h-tweet="#beiber">Isn’t Justin dreamy?</span>
 ```
 
 Now, we want to build an extension that can detect these hTweets and create links to Twitter, or maybe display a pop-up tweet-input-field when the mouse hovers over them that's pre-filled with the hash tag.
@@ -65,11 +65,11 @@ A couple things to note at this point:
 Let's look at another hypothetical example inspired by the requirements of real-world widget libraries like Dojo Widgets. Let’s say we’re creating a UI widget library that allows its widgets to be declared and configured in HTML:
 
 ```
-<div data-widget=”fancyButton”   
-     data-widget-theme=”midnight”>Click Me!</div>
+<div data-widget="fancyButton"   
+     data-widget-theme="midnight">Click Me!</div>
 ```
 
-Our library will probably want to look for all such elements in the page when it loads by listening to the `DOMContentLoaded` event, doing a `querySelectorAll(“*[data-widget]”)` and setting them all up.
+Our library will probably want to look for all such elements in the page when it loads by listening to the `DOMContentLoaded` event, doing a `querySelectorAll("*[data-widget]")` and setting them all up.
 
 But our library also wants to respond to new widgets that appear in the page, possibly created by script or a templating library. In order to accomplish this, we’d create an [element query](APIReference.md#the-element-query) like this:
 
@@ -123,8 +123,8 @@ function updateWidgets(summaries) {
 Let’s add one more complication: Say our widget library also allows in-line handling of events that its widgets can emit via a script element with a special type attribute:
 
 ```
-<div data-widget=”autocomplete”>
-  <script type=”widget/event-handler” data-event=”selectionMade”>
+<div data-widget="autocomplete">
+  <script type="widget/event-handler" data-event="selectionMade">
     // Handle the user navigating over a autocomplete suggestion
     // and pressing return or clicking.
   </script>
@@ -140,7 +140,7 @@ var observer = new MutationSummary({
     element: '*[data-widget]',
     elementAttributes: ‘data-widget data-widget-theme’
   },{
-    element: 'script[type=”widget/event-handler”]',
+    element: 'script[type="widget/event-handler"]',
     elementAttributes: ‘data-event’
   }]
 });

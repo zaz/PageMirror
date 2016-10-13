@@ -34,7 +34,7 @@ Lots of things, here are some examples:
 The intent here isn't to be all things to all use-cases. Mutation Summary is not meant to:
 
   * **Use the DOM as some sort of state-transition machine.** It won't report transient states that the DOM moved through. It will only tell you what the difference is between the previous state and the present one.
-  * **Observing complex selectors.** It offers support for a simple [subset of CSS selectors](APIReference.md#supported-selector-syntax). Want to observe all elements that match `“div[foo] span.bar > p:first-child”`? Unfortunately, efficiently computing that is much harder and currently outside the scope of this library.
+  * **Observing complex selectors.** It offers support for a simple [subset of CSS selectors](APIReference.md#supported-selector-syntax). Want to observe all elements that match `"div[foo] span.bar > p:first-child"`? Unfortunately, efficiently computing that is much harder and currently outside the scope of this library.
 
 Note that both of the above use cases are possible given the data that the underlying Mutation Observers API provides -- we simply judged them to be outside the "80% use case" that we targeted with this particular library.
 
