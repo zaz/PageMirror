@@ -49,7 +49,7 @@ function handleHTweetChanges(summaries) {
   });
 
   hTweetSummary.removed.forEach(function(removedEl) {
-    // do tear-down or cleanup work for elements that had    
+    // do tear-down or cleanup work for elements that had
     // data-h-tweet.
   });
 }
@@ -65,7 +65,7 @@ A couple things to note at this point:
 Let's look at another hypothetical example inspired by the requirements of real-world widget libraries like Dojo Widgets. Let’s say we’re creating a UI widget library that allows its widgets to be declared and configured in HTML:
 
 ```
-<div data-widget="fancyButton"   
+<div data-widget="fancyButton"
      data-widget-theme="midnight">Click Me!</div>
 ```
 

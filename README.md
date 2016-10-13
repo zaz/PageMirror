@@ -43,7 +43,7 @@ Note that both of the above use cases are possible given the data that the under
 The Mutation Summary library depends on the presence of the Mutation Observer DOM API. Mutation Observers are available in
 
  * [Google Chrome](https://www.google.com/chrome)
- * [Firefox](http://www.mozilla.org/en-US/firefox/new/) 
+ * [Firefox](http://www.mozilla.org/en-US/firefox/new/)
  * [Safari](http://www.apple.com/safari/)
  * [Opera](http://www.opera.com/)
  * [IE11](http://www.microsoft.com/ie)

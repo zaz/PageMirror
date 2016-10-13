@@ -14,7 +14,7 @@ var observer = new MutationSummary({
   oldPreviousSibling: // optional, defaults to false
   queries: [
     { /* query1 */ },
-    { /* query2 */ }, 
+    { /* query2 */ },
       // …
     { /* queryN */ }
   ]

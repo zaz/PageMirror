@@ -13,7 +13,7 @@ The purpose of this example is to demonstrate how to fully mirror the contents o
 4. Click the 'Load unpacked extension...' button.
 5. Navigate the file browser to this directory and click select.
 
-This shoud load the extension and a little button with an icon of 'Evil Spock' should appear in the top-right corner of each Chrome window.
+This should load the extension and a little button with an icon of 'Evil Spock' should appear in the top-right corner of each Chrome window.
 
 
 --Usage---
@@ -25,12 +25,12 @@ This shoud load the extension and a little button with an icon of 'Evil Spock' s
 
 --Note--
 
-Web sites that use iframes (like Gmail) won't work correctly because this example doesn't attempt to recursively mirror the contents of iframes.
+Web sites that use IFrames (like Gmail) won't work correctly because this example doesn't attempt to recursively mirror the contents of IFrames.
 
-The "mirror" won't be functional (interacting with it won't behave like the source page). The reason is that no attempt is made to mirror the javascript state of the source page.
+The "mirror" won't be functional (interacting with it won't behave like the source page). The reason is that no attempt is made to mirror the JavaScript state of the source page.
 
 
---Techincal Note--
+--Technical Note--
 
 In this example, the mechanism by which DOM structures are serialized is relatively naive and no attempt is made to minimize the size of the serialized structures (compressing the messages, for example).
 
