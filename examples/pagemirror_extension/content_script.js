@@ -51,28 +51,3 @@ chrome.runtime.onMessage.addListener( server => {
     sock.onclose = mirrorClient.disconnect;
   };
 });
-
-
-chrome.extension.onConnect.addListener(port => {
-  port.postMessage({ base: location.href.match(/^(.*\/)[^\/]*$/)[1] });
-
-  var mirrorClient = new TreeMirrorClient(document, {
-    initialize: (rootId, children) => {
-      port.postMessage({
-        f: 'initialize',
-        args: [rootId, children]
-      });
-    },
-
-    applyChanged: (removed, addedOrMoved, attributes, text) => {
-      port.postMessage({
-        f: 'applyChanged',
-        args: [removed, addedOrMoved, attributes, text]
-      });
-    }
-  });
-
-  port.onDisconnect.addListener(() => {
-    mirrorClient.disconnect();
-  });
-});

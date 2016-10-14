@@ -46,17 +46,4 @@ window.addEventListener('DOMContentLoaded', () => {
 
     // sock.onclose = window.close
   }
-
-  var port = chrome.tabs.connect(tabId);
-
-  // port.onMessage.addListener((msg) => {
-  //   if (msg.base)
-  //     base = msg.base;
-  //   else
-  //     mirror[msg.f].apply(mirror, msg.args);
-  // });
-
-  port.onDisconnect.addListener(msg => {
-    // window.close();
-  });
 });
