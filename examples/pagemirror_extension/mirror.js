@@ -1,18 +1,10 @@
-// Copyright 2012 Google Inc.
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+const server = "ws://127.0.0.1:1111"
+var initiated = false
+
+WebSocket.prototype.sendJSON = function(m) { this.send(JSON.stringify(m)) }
 
 window.addEventListener('DOMContentLoaded', () => {
+  console.log('DOMContentLoaded')
   if (typeof WebKitMutationObserver !== 'function') {
     var h3 = document.body.appendChild(document.createElement('h3'));
     h3.textContent = 'PageMirror requires MutationObserver.';
@@ -37,25 +29,46 @@ window.addEventListener('DOMContentLoaded', () => {
         return node;
       }
 
-      if (tagName == 'HEAD') {
-        var node = document.createElement('HEAD');
-        node.appendChild(document.createElement('BASE'));
-        node.firstChild.href = base;
-        return node;
-      }
+      // if (tagName == 'HEAD') {
+      //   var node = document.createElement('HEAD');
+      //   node.appendChild(document.createElement('BASE'));
+      //   node.firstChild.href = base;
+      //   return node;
+      // }
     }
   });
 
+  sock = new WebSocket(server);
+  sock.onopen = () => {
+    sock.sendJSON({id: "joe"})
+    if (! initiated) {
+      initiated = true
+      sock.sendJSON({to: "bob", begin: true})
+    }
+    sock.onmessage = (m) => {
+      try { d = JSON.parse(m.data) }
+      catch (err) { return }
+      console.log(d)
+      // if (d.base)
+        // base = document.head.appendChild(document.createElement('BASE'));
+        // base.href = d.base
+      if (d.f)
+        mirror[d.f].apply(mirror, d.args);
+    };
+
+    // sock.onclose = window.close
+  }
+
   var port = chrome.tabs.connect(tabId);
 
-  port.onMessage.addListener(msg => {
-    if (msg.base)
-      base = msg.base;
-    else
-      mirror[msg.f].apply(mirror, msg.args);
-  });
+  // port.onMessage.addListener((msg) => {
+  //   if (msg.base)
+  //     base = msg.base;
+  //   else
+  //     mirror[msg.f].apply(mirror, msg.args);
+  // });
 
   port.onDisconnect.addListener(msg => {
-    window.close();
+    // window.close();
   });
 });

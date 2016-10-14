@@ -1,22 +1,60 @@
-// Copyright 2011 Google Inc.
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+WebSocket.prototype.sendJSON = function(m) { this.send(JSON.stringify(m)) }
 
 var observer;
 
 if (typeof WebKitMutationObserver != 'function') {
   throw Error('PageMirror requires MutationObserver.');
 }
+
+chrome.runtime.onMessage.addListener( server => {
+
+  if (document.getElementsByTagName("base").length < 1) {
+    fh = document.head.firstChild
+    if (fh) {
+      base = document.head.insertBefore(document.createElement("base"), fh)
+    } else {
+      base = document.head.appendChild(document.createElement("base"))
+    }
+    base.href = location.href.match(/^(.*\/)[^\/]*$/)[1]
+    console.log(base.href)
+  }
+
+  sock = new WebSocket(server);
+  sock.onopen = () => {
+    sock.sendJSON({id: "bob"})
+  }
+  sock.onmessage = (m) => {
+    // XXX check this area of code
+    try { d = JSON.parse(m.data) }
+    catch (err) { return; }
+    console.log(d)
+    if (! d.begin) { return; }
+
+    sock.sendJSON({ base: location.href.match(/^(.*\/)[^\/]*$/)[1] });
+    // sock.send( location.href.match(/^(.*\/)[^\/]*$/)[1] );  // XXX DEBUG
+
+    var mirrorClient = new TreeMirrorClient(document, {
+      initialize: (rootId, children) => {
+        sock.sendJSON({
+          to: 'joe',
+          f: 'initialize',
+          args: [rootId, children]
+        });
+      },
+
+      applyChanged: (removed, addedOrMoved, attributes, text) => {
+        sock.sendJSON({
+          to: 'joe',
+          f: 'applyChanged',
+          args: [removed, addedOrMoved, attributes, text]
+        });
+      }
+    });
+
+    sock.onclose = mirrorClient.disconnect;
+  };
+});
+
 
 chrome.extension.onConnect.addListener(port => {
   port.postMessage({ base: location.href.match(/^(.*\/)[^\/]*$/)[1] });
