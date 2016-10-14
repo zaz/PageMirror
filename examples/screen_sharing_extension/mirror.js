@@ -48,7 +48,7 @@ window.addEventListener('DOMContentLoaded', () => {
     else if (msg.base)
       base = msg.base;
     else
-      mirror[msg.f].apply(mirror, msg.args);
+      mirror[msg.f](...msg.args);
   }
 
   socket.onmessage = event => {
