@@ -19,8 +19,6 @@ window.addEventListener('DOMContentLoaded', () => {
     document.removeChild(document.firstChild);
   }
 
-  var base;
-
   var mirror = new TreeMirror(document, {
     createElement: tagName => {
       if (tagName == 'SCRIPT') {
@@ -28,13 +26,6 @@ window.addEventListener('DOMContentLoaded', () => {
         node.style.display = 'none';
         return node;
       }
-
-      // if (tagName == 'HEAD') {
-      //   var node = document.createElement('HEAD');
-      //   node.appendChild(document.createElement('BASE'));
-      //   node.firstChild.href = base;
-      //   return node;
-      // }
     }
   });
 
@@ -49,9 +40,6 @@ window.addEventListener('DOMContentLoaded', () => {
       try { d = JSON.parse(m.data) }
       catch (err) { return }
       console.log(d)
-      // if (d.base)
-        // base = document.head.appendChild(document.createElement('BASE'));
-        // base.href = d.base
       if (d.f)
         mirror[d.f].apply(mirror, d.args);
     };

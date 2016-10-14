@@ -30,9 +30,6 @@ chrome.runtime.onMessage.addListener( server => {
     console.log(d)
     if (! d.begin) { return; }
 
-    sock.sendJSON({ base: location.href.match(/^(.*\/)[^\/]*$/)[1] });
-    // sock.send( location.href.match(/^(.*\/)[^\/]*$/)[1] );  // XXX DEBUG
-
     var mirrorClient = new TreeMirrorClient(document, {
       initialize: (rootId, children) => {
         sock.sendJSON({
