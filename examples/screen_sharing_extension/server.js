@@ -12,9 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-var WebSocket = require('faye-websocket');
-var http      = require('http');
-var fs        = require('fs');
+import WebSocket from 'faye-websocket';
+
+import http from 'http';
+import fs from 'fs';
 
 var server = http.createServer();
 
