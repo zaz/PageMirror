@@ -1,6 +1,6 @@
 # Introduction #
 
-There are multiple valid approaches to mirroring a tree using Mutation Observers. [TreeMirror](util/tree_mirror.js) trades off a small amount of memory so it can be fast to process changes. It maintains a mapping from local node to remote node, so that when it processes the `added`, `removed`, `reparented` & `reordered` node arrays, it can efficiently find the corresponding remote node by simply looking it up in the map.
+There are multiple valid approaches to mirroring a tree using Mutation Observers. [TreeMirror](util/tree-mirror.js) trades off a small amount of memory so it can be fast to process changes. It maintains a mapping from local node to remote node, so that when it processes the `added`, `removed`, `reparented` & `reordered` node arrays, it can efficiently find the corresponding remote node by simply looking it up in the map.
 
 # Details #
 

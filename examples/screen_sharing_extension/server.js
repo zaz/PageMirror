@@ -20,7 +20,7 @@ var server = http.createServer();
 
 fs.readFile('mirror.html', function(err, mirrorHTML) {
   fs.readFile('mirror.js', function(err, mirrorJS) {
-    fs.readFile('tree_mirror.js', function(err, treeMirrorJS) {
+    fs.readFile('tree-mirror.js', function(err, treeMirrorJS) {
 
       server.addListener('request', function(request, response) {
         if (request.url == '/mirror.html' || request.url == '/' || request.url == '/index.html') {
@@ -35,7 +35,7 @@ fs.readFile('mirror.html', function(err, mirrorHTML) {
           return;
         }
 
-        if (request.url == '/tree_mirror.js') {
+        if (request.url == '/tree-mirror.js') {
           response.writeHead(200, {'Content-Type': 'text/javascript'});
           response.end(treeMirrorJS);
           return;
