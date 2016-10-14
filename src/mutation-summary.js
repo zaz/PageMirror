@@ -762,14 +762,14 @@ var Selector = ((() => {
         this.qualifiers = [];
     }
     Object.defineProperty(Selector.prototype, "caseInsensitiveTagName", {
-        get: function () {
+        get() {
             return this.tagName.toUpperCase();
         },
         enumerable: true,
         configurable: true
     });
     Object.defineProperty(Selector.prototype, "selectorString", {
-        get: function () {
+        get() {
             return this.tagName + this.qualifiers.join('');
         },
         enumerable: true,

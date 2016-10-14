@@ -295,7 +295,7 @@ suite('Setup', () => {
     assert.throws(() => {
       new MutationSummary({
         blarg: true,
-        callback: function() {},
+        callback() {},
         queries: [{ all: true }]
       });
     });
@@ -317,42 +317,42 @@ suite('Setup', () => {
     // queries is required.
     assert.throws(() => {
       new MutationSummary({
-        callback: function() {},
+        callback() {},
       });
     });
 
     // queries must contain at least one query request.
     assert.throws(() => {
       new MutationSummary({
-        callback: function() {},
+        callback() {},
         queries: []
       });
     });
 
     // Valid all request.
     new MutationSummary({
-      callback: function() {},
+      callback() {},
       queries: [{ all: true }]
     });
 
     // all doesn't allow options.
     assert.throws(() => {
       new MutationSummary({
-        callback: function() {},
+        callback() {},
         queries: [{ all: true, foo: false }]
       });
     });
 
     // Valid attribute request.
     new MutationSummary({
-      callback: function() {},
+      callback() {},
       queries: [{ attribute: "foo" }]
     });
 
     // attribute doesn't allow options.
     assert.throws(() => {
       new MutationSummary({
-        callback: function() {},
+        callback() {},
         queries: [{ attribute: "foo", bar: false }]
       });
     });
@@ -360,7 +360,7 @@ suite('Setup', () => {
     // attribute must be a string.
     assert.throws(() => {
       new MutationSummary({
-        callback: function() {},
+        callback() {},
         queries: [{ attribute: 1 }]
       });
     });
@@ -368,7 +368,7 @@ suite('Setup', () => {
     // attribute must be non-zero length.
     assert.throws(() => {
       new MutationSummary({
-        callback: function() {},
+        callback() {},
         queries: [{ attribute: '  ' }]
       });
     });
@@ -376,7 +376,7 @@ suite('Setup', () => {
     // attribute must names must be valid.
     assert.throws(() => {
       new MutationSummary({
-        callback: function() {},
+        callback() {},
         queries: [{ attribute: '1foo' }]
       });
     });
@@ -384,32 +384,32 @@ suite('Setup', () => {
     // attribute must contain only one attribute.
     assert.throws(() => {
       new MutationSummary({
-        callback: function() {},
+        callback() {},
         queries: [{ attribute: 'foo bar' }]
       });
     });
 
     // Valid element request.
     new MutationSummary({
-      callback: function() {},
+      callback() {},
       queries: [{ element: 'div' }]
     });
 
     // Valid element request 2.
     new MutationSummary({
-      callback: function() {},
+      callback() {},
       queries: [{ element: 'div, span[foo]' }]
     });
 
     // Valid element request 3.
     new MutationSummary({
-      callback: function() {},
+      callback() {},
       queries: [{ element: 'div', elementAttributes: "foo bar" }]
     });
 
     // Valid element request 4.
     new MutationSummary({
-      callback: function() {},
+      callback() {},
       oldPreviousSibling: true,
       queries: [{ element: 'div, span[foo]' }]
     });
@@ -417,7 +417,7 @@ suite('Setup', () => {
     // elementFilter doesn't support descendant selectors.
     assert.throws(() => {
       new MutationSummary({
-        callback: function() {},
+        callback() {},
         queries: [{ element: 'div span[foo]' }]
       });
     });
@@ -425,7 +425,7 @@ suite('Setup', () => {
     // elementFilter must contain at least one item
     assert.throws(() => {
       new MutationSummary({
-        callback: function() {},
+        callback() {},
         queries: [{ element: '' }]
       });
     });
@@ -433,7 +433,7 @@ suite('Setup', () => {
     // Invalid element syntanx.
     assert.throws(() => {
       new MutationSummary({
-        callback: function() {},
+        callback() {},
         queries: [{ element: 'div[noTrailingBracket', }]
       });
     });
@@ -441,7 +441,7 @@ suite('Setup', () => {
     // Invalid element option
     assert.throws(() => {
       new MutationSummary({
-        callback: function() {},
+        callback() {},
         queries: [{ element: 'div[foo]', foo: true }]
       });
     });
@@ -449,7 +449,7 @@ suite('Setup', () => {
     // elememtAttribute must contain valid attribute names
     assert.throws(() => {
       new MutationSummary({
-        callback: function() {},
+        callback() {},
         queries: [{ element: 'div[foo]', elementAttributes: 'foo 1bar' }]
       });
     });
@@ -457,21 +457,21 @@ suite('Setup', () => {
     // Invalid element option 2.
     assert.throws(() => {
       new MutationSummary({
-        callback: function() {},
+        callback() {},
         queries: [{ element: 'div[foo]', elementAttributes: 'foo', foo: true }]
       });
     });
 
     // Valid characterData request.
     new MutationSummary({
-      callback: function() {},
+      callback() {},
       queries: [{ characterData: true }]
     });
 
     // Invalid characterData option.
     assert.throws(() => {
       new MutationSummary({
-        callback: function() {},
+        callback() {},
         queries: [{ characterData: true, foo: true }]
       });
     });
@@ -479,7 +479,7 @@ suite('Setup', () => {
     // Invalid query request.
     assert.throws(() => {
       new MutationSummary({
-        callback: function() {},
+        callback() {},
         queries: [{  }]
       });
     });
@@ -487,7 +487,7 @@ suite('Setup', () => {
     // Invalid query request.
     assert.throws(() => {
       new MutationSummary({
-        callback: function() {},
+        callback() {},
         queries: [{ foo: true  }]
       });
     });
@@ -495,7 +495,7 @@ suite('Setup', () => {
     // Disallow listening to multiple 'cases' of the same attribute.
     assert.throws(() => {
       new MutationSummary({
-        callback: function() {},
+        callback() {},
         queries: [{ element: 'a', elementAttributes: 'Bar bar' }]
       });
     });

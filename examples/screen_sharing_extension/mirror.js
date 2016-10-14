@@ -18,7 +18,7 @@ window.addEventListener('DOMContentLoaded', () => {
   var base;
 
   var mirror = new TreeMirror(document, {
-    createElement: function(tagName) {
+    createElement(tagName) {
       if (tagName == 'SCRIPT') {
         var node = document.createElement('NO-SCRIPT');
         node.style.display = 'none';

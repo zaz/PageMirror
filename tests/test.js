@@ -30,7 +30,7 @@ suite('Mutation Summary', () => {
         query = q || { all: true };
         options = {
             rootNode: testDiv,
-            callback: function () {
+            callback() {
                 throw 'Mutation Delivered at end of microtask';
             },
             queries: [query]
@@ -834,7 +834,7 @@ suite('Mutation Summary', () => {
         var summary1 = new MutationSummary({
             observeOwnChanges: false,
             queries: [{ all: true }],
-            callback: function (summaries) {
+            callback(summaries) {
                 var summary = summaries[0];
                 count++;
                 if (count == 1) {
@@ -856,7 +856,7 @@ suite('Mutation Summary', () => {
         var summary2 = new MutationSummary({
             observeOwnChanges: false,
             queries: [{ all: true }],
-            callback: function (summaries) {
+            callback(summaries) {
                 var summary = summaries[0];
                 count++;
                 if (count == 1) {
@@ -883,7 +883,7 @@ suite('Mutation Summary', () => {
         var summary = new MutationSummary({
             queries: [{ all: true }],
             rootNode: div,
-            callback: function (summaries) {
+            callback(summaries) {
                 callbackCount++;
                 if (callbackCount > 1)
                     return;

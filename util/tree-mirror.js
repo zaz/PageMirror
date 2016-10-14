@@ -124,7 +124,7 @@ var TreeMirrorClient = (function () {
             queries = queries.concat(testingQueries);
         this.mutationSummary = new MutationSummary({
             rootNode: target,
-            callback: function (summaries) {
+            callback(summaries) {
                 _this.applyChanged(summaries);
             },
             queries: queries

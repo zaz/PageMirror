@@ -39,14 +39,14 @@ function startMirroring() {
   socket.onopen = () => {
     socketSend({ base: location.href.match(/^(.*\/)[^\/]*$/)[1] });
     mirrorClient = new TreeMirrorClient(document, {
-      initialize: function(rootId, children) {
+      initialize(rootId, children) {
         socketSend({
           f: 'initialize',
           args: [rootId, children]
         });
       },
 
-      applyChanged: function(removed, addedOrMoved, attributes, text) {
+      applyChanged(removed, addedOrMoved, attributes, text) {
         socketSend({
           f: 'applyChanged',
           args: [removed, addedOrMoved, attributes, text]
