@@ -127,7 +127,7 @@ var TreeMirrorClient = (function () {
             callback(summaries) {
                 _this.applyChanged(summaries);
             },
-            queries: queries
+            queries
         });
     }
     TreeMirrorClient.prototype.disconnect = function () {
@@ -149,7 +149,7 @@ var TreeMirrorClient = (function () {
             return null;
         var id = this.knownNodes.get(node);
         if (id !== undefined) {
-            return { id: id };
+            return { id };
         }
         var data = {
             nodeType: node.nodeType,
