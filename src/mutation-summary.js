@@ -11,12 +11,12 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-var __extends = this.__extends || function (d, b) {
+var __extends = this.__extends || ((d, b) => {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
     __.prototype = b.prototype;
     d.prototype = new __();
-};
+});
 var MutationObserverCtor;
 if (typeof WebKitMutationObserver !== 'undefined')
     MutationObserverCtor = WebKitMutationObserver;
@@ -27,15 +27,13 @@ if (MutationObserverCtor === undefined) {
     console.error('https://developer.mozilla.org/en-US/docs/DOM/MutationObserver');
     throw Error('DOM Mutation Observers are required');
 }
-var NodeMap = (function () {
+var NodeMap = ((() => {
     function NodeMap() {
         this.nodes = [];
         this.values = [];
     }
-    NodeMap.prototype.isIndex = function (s) {
-        return +s === s >>> 0;
-    };
-    NodeMap.prototype.nodeId = function (node) {
+    NodeMap.prototype.isIndex = s => +s === s >>> 0;
+    NodeMap.prototype.nodeId = node => {
         var id = node[NodeMap.ID_PROP];
         if (!id)
             id = node[NodeMap.ID_PROP] = NodeMap.nextId_++;
@@ -70,7 +68,7 @@ var NodeMap = (function () {
     NodeMap.ID_PROP = '__mutation_summary_node_map_id__';
     NodeMap.nextId_ = 1;
     return NodeMap;
-})();
+}))();
 /**
  *  var reachableMatchableProduct = [
  *  //  STAYED_OUT,  ENTERED,     STAYED_IN,   EXITED
@@ -81,18 +79,18 @@ var NodeMap = (function () {
  *  ];
  */
 var Movement;
-(function (Movement) {
+((Movement => {
     Movement[Movement["STAYED_OUT"] = 0] = "STAYED_OUT";
     Movement[Movement["ENTERED"] = 1] = "ENTERED";
     Movement[Movement["STAYED_IN"] = 2] = "STAYED_IN";
     Movement[Movement["REPARENTED"] = 3] = "REPARENTED";
     Movement[Movement["REORDERED"] = 4] = "REORDERED";
     Movement[Movement["EXITED"] = 5] = "EXITED";
-})(Movement || (Movement = {}));
+}))(Movement || (Movement = {}));
 function enteredOrExited(changeType) {
     return changeType === Movement.ENTERED || changeType === Movement.EXITED;
 }
-var NodeChange = (function () {
+var NodeChange = ((() => {
     function NodeChange(node, childList, attributes, characterData, oldParentNode, added, attributeOldValues, characterDataOldValue) {
         if (childList === void 0) { childList = false; }
         if (attributes === void 0) { attributes = false; }
@@ -173,8 +171,8 @@ var NodeChange = (function () {
         return this.node.parentNode;
     };
     return NodeChange;
-})();
-var ChildListChange = (function () {
+}))();
+var ChildListChange = ((() => {
     function ChildListChange() {
         this.added = new NodeMap();
         this.removed = new NodeMap();
@@ -183,8 +181,8 @@ var ChildListChange = (function () {
         this.moved = undefined;
     }
     return ChildListChange;
-})();
-var TreeChanges = (function (_super) {
+}))();
+var TreeChanges = ((_super => {
     __extends(TreeChanges, _super);
     function TreeChanges(rootNode, mutations) {
         _super.call(this);
@@ -269,8 +267,8 @@ var TreeChanges = (function (_super) {
             Movement.EXITED : Movement.STAYED_OUT;
     };
     return TreeChanges;
-})(NodeMap);
-var MutationProjection = (function () {
+}))(NodeMap);
+var MutationProjection = ((() => {
     // TOOD(any)
     function MutationProjection(rootNode, mutations, selectors, calcReordered, calcOldPreviousSibling) {
         this.rootNode = rootNode;
@@ -518,9 +516,7 @@ var MutationProjection = (function () {
         if (node.nodeType !== Node.ELEMENT_NODE)
             return Movement.STAYED_OUT;
         var el = node;
-        var matchChanges = this.selectors.map(function (selector) {
-            return _this.computeMatchabilityChange(selector, el);
-        });
+        var matchChanges = this.selectors.map(selector => _this.computeMatchabilityChange(selector, el));
         var accum = Movement.STAYED_OUT;
         var i = 0;
         while (accum !== Movement.STAYED_IN && i < matchChanges.length) {
@@ -671,8 +667,8 @@ var MutationProjection = (function () {
         return change.moved.get(node);
     };
     return MutationProjection;
-})();
-var Summary = (function () {
+}))();
+var Summary = ((() => {
     function Summary(projection, query) {
         var _this = this;
         this.projection = projection;
@@ -690,7 +686,7 @@ var Summary = (function () {
             else {
                 this.attributeChanged = attributeChanged;
                 if (query.attributeList) {
-                    query.attributeList.forEach(function (attrName) {
+                    query.attributeList.forEach(attrName => {
                         if (!_this.attributeChanged.hasOwnProperty(attrName))
                             _this.attributeChanged[attrName] = [];
                     });
@@ -720,7 +716,7 @@ var Summary = (function () {
         return this.projection.getOldPreviousSibling(node);
     };
     return Summary;
-})();
+}))();
 // TODO(rafaelw): Allow ':' and '.' as valid name characters.
 var validNameInitialChar = /[a-zA-Z_]+/;
 var validNameNonInitialChar = /[a-zA-Z0-9_\-]+/;
@@ -730,7 +726,7 @@ var validNameNonInitialChar = /[a-zA-Z0-9_\-]+/;
 function escapeQuotes(value) {
     return '"' + value.replace(/"/, '\\\"') + '"';
 }
-var Qualifier = (function () {
+var Qualifier = ((() => {
     function Qualifier() {
     }
     Qualifier.prototype.matches = function (oldValue) {
@@ -759,8 +755,8 @@ var Qualifier = (function () {
         return '[' + this.attrName + ']';
     };
     return Qualifier;
-})();
-var Selector = (function () {
+}))();
+var Selector = ((() => {
     function Selector() {
         this.uid = Selector.nextUid++;
         this.qualifiers = [];
@@ -815,7 +811,7 @@ var Selector = (function () {
         else
             return this.wasMatching(el, change, isMatching) ? Movement.EXITED : Movement.STAYED_OUT;
     };
-    Selector.parseSelectors = function (input) {
+    Selector.parseSelectors = input => {
         var selectors = [];
         var currentSelector;
         var currentQualifier;
@@ -1122,7 +1118,7 @@ var Selector = (function () {
         return selectors;
     };
     Selector.nextUid = 1;
-    Selector.matchesSelector = (function () {
+    Selector.matchesSelector = ((() => {
         var element = document.createElement('div');
         if (typeof element['webkitMatchesSelector'] === 'function')
             return 'webkitMatchesSelector';
@@ -1131,9 +1127,9 @@ var Selector = (function () {
         if (typeof element['msMatchesSelector'] === 'function')
             return 'msMatchesSelector';
         return 'matchesSelector';
-    })();
+    }))();
     return Selector;
-})();
+}))();
 var attributeFilterPattern = /^([a-zA-Z:_]+[a-zA-Z0-9_\-:\.]*)$/;
 function validateAttribute(attribute) {
     if (typeof attribute != 'string')
@@ -1166,14 +1162,14 @@ function validateElementAttributes(attribs) {
 }
 function elementFilterAttributes(selectors) {
     var attributes = {};
-    selectors.forEach(function (selector) {
-        selector.qualifiers.forEach(function (qualifier) {
+    selectors.forEach(selector => {
+        selector.qualifiers.forEach(qualifier => {
             attributes[qualifier.attrName] = true;
         });
     });
     return Object.keys(attributes);
 }
-var MutationSummary = (function () {
+var MutationSummary = ((() => {
     function MutationSummary(opts) {
         var _this = this;
         this.connected = false;
@@ -1181,26 +1177,20 @@ var MutationSummary = (function () {
         this.observerOptions = MutationSummary.createObserverOptions(this.options.queries);
         this.root = this.options.rootNode;
         this.callback = this.options.callback;
-        this.elementFilter = Array.prototype.concat.apply([], this.options.queries.map(function (query) {
-            return query.elementFilter ? query.elementFilter : [];
-        }));
+        this.elementFilter = Array.prototype.concat.apply([], this.options.queries.map(query => query.elementFilter ? query.elementFilter : []));
         if (!this.elementFilter.length)
             this.elementFilter = undefined;
-        this.calcReordered = this.options.queries.some(function (query) {
-            return query.all;
-        });
+        this.calcReordered = this.options.queries.some(query => query.all);
         this.queryValidators = []; // TODO(rafaelw): Shouldn't always define this.
         if (MutationSummary.createQueryValidator) {
-            this.queryValidators = this.options.queries.map(function (query) {
-                return MutationSummary.createQueryValidator(_this.root, query);
-            });
+            this.queryValidators = this.options.queries.map(query => MutationSummary.createQueryValidator(_this.root, query));
         }
-        this.observer = new MutationObserverCtor(function (mutations) {
+        this.observer = new MutationObserverCtor(mutations => {
             _this.observerCallback(mutations);
         });
         this.reconnect();
     }
-    MutationSummary.createObserverOptions = function (queries) {
+    MutationSummary.createObserverOptions = queries => {
         var observerOptions = {
             childList: true,
             subtree: true
@@ -1218,12 +1208,12 @@ var MutationSummary = (function () {
             }
             // add to observed.
             attributeFilter = attributeFilter || {};
-            attributes.forEach(function (attribute) {
+            attributes.forEach(attribute => {
                 attributeFilter[attribute] = true;
                 attributeFilter[attribute.toLowerCase()] = true;
             });
         }
-        queries.forEach(function (query) {
+        queries.forEach(query => {
             if (query.characterData) {
                 observerOptions.characterData = true;
                 observerOptions.characterDataOldValue = true;
@@ -1247,7 +1237,7 @@ var MutationSummary = (function () {
             observerOptions.attributeFilter = Object.keys(attributeFilter);
         return observerOptions;
     };
-    MutationSummary.validateOptions = function (options) {
+    MutationSummary.validateOptions = options => {
         for (var prop in options) {
             if (!(prop in MutationSummary.optionKeys))
                 throw Error('Invalid option: ' + prop);
@@ -1321,34 +1311,30 @@ var MutationSummary = (function () {
         return summaries;
     };
     MutationSummary.prototype.checkpointQueryValidators = function () {
-        this.queryValidators.forEach(function (validator) {
+        this.queryValidators.forEach(validator => {
             if (validator)
                 validator.recordPreviousState();
         });
     };
     MutationSummary.prototype.runQueryValidators = function (summaries) {
-        this.queryValidators.forEach(function (validator, index) {
+        this.queryValidators.forEach((validator, index) => {
             if (validator)
                 validator.validate(summaries[index]);
         });
     };
-    MutationSummary.prototype.changesToReport = function (summaries) {
-        return summaries.some(function (summary) {
-            var summaryProps = ['added', 'removed', 'reordered', 'reparented',
-                'valueChanged', 'characterDataChanged'];
-            if (summaryProps.some(function (prop) { return summary[prop] && summary[prop].length; }))
+    MutationSummary.prototype.changesToReport = summaries => summaries.some(summary => {
+        var summaryProps = ['added', 'removed', 'reordered', 'reparented',
+            'valueChanged', 'characterDataChanged'];
+        if (summaryProps.some(prop => summary[prop] && summary[prop].length))
+            return true;
+        if (summary.attributeChanged) {
+            var attrNames = Object.keys(summary.attributeChanged);
+            var attrsChanged = attrNames.some(attrName => !!summary.attributeChanged[attrName].length);
+            if (attrsChanged)
                 return true;
-            if (summary.attributeChanged) {
-                var attrNames = Object.keys(summary.attributeChanged);
-                var attrsChanged = attrNames.some(function (attrName) {
-                    return !!summary.attributeChanged[attrName].length;
-                });
-                if (attrsChanged)
-                    return true;
-            }
-            return false;
-        });
-    };
+        }
+        return false;
+    });
     MutationSummary.prototype.observerCallback = function (mutations) {
         if (!this.options.observeOwnChanges)
             this.observer.disconnect();
@@ -1393,4 +1379,4 @@ var MutationSummary = (function () {
         'observeOwnChanges': true
     };
     return MutationSummary;
-})();
+}))();

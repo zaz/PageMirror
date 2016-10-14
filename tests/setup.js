@@ -14,13 +14,13 @@
 
 function assertSelectorNames(selectors, expectSelectorStrings) {
   assert.strictEqual(expectSelectorStrings.length, selectors.length);
-  expectSelectorStrings.forEach(function(expectSelectorString, i) {
+  expectSelectorStrings.forEach((expectSelectorString, i) => {
     assert.strictEqual(expectSelectorString, selectors[i].selectorString);
   });
 }
 
-suite('Setup', function() {
-  test('Selector Parsing', function() {
+suite('Setup', () => {
+  test('Selector Parsing', () => {
     assertSelectorNames(
       MutationSummary.parseElementFilter('div'),
       ['div']
@@ -41,27 +41,27 @@ suite('Setup', function() {
       ['div', 'SPAN']
     );
 
-    assert.throws(function() {
+    assert.throws(() => {
       MutationSummary.parseElementFilter('div span');
     });
 
-    assert.throws(function() {
+    assert.throws(() => {
       MutationSummary.parseElementFilter('div > span');
     });
 
-    assert.throws(function() {
+    assert.throws(() => {
       MutationSummary.parseElementFilter('div>span');
     });
 
-    assert.throws(function() {
+    assert.throws(() => {
       MutationSummary.parseElementFilter('div < span');
     });
 
-    assert.throws(function() {
+    assert.throws(() => {
       MutationSummary.parseElementFilter('div<span');
     });
 
-    assert.throws(function() {
+    assert.throws(() => {
       MutationSummary.parseElementFilter('div:first-child')
     });
 
@@ -85,11 +85,11 @@ suite('Setup', function() {
       ['span', '*#id']
     );
 
-    assert.throws(function() {
+    assert.throws(() => {
       MutationSummary.parseElementFilter('#2foo');
     });
 
-    assert.throws(function() {
+    assert.throws(() => {
       MutationSummary.parseElementFilter('# div');
     });
 
@@ -138,23 +138,23 @@ suite('Setup', function() {
       ['*.className', '*.className', 'SPAN.className']
     );
 
-    assert.throws(function() {
+    assert.throws(() => {
       MutationSummary.parseElementFilter('div. className');
     });
 
-    assert.throws(function() {
+    assert.throws(() => {
       MutationSummary.parseElementFilter('div . className');
     });
 
-    assert.throws(function() {
+    assert.throws(() => {
       MutationSummary.parseElementFilter('div .className');
     });
 
-    assert.throws(function() {
+    assert.throws(() => {
       MutationSummary.parseElementFilter('div .className');
     });
 
-    assert.throws(function() {
+    assert.throws(() => {
       MutationSummary.parseElementFilter('.2className');
     });
 
@@ -208,15 +208,15 @@ suite('Setup', function() {
       ['*[foo][bar]']
     );
 
-    assert.throws(function() {
+    assert.throws(() => {
       MutationSummary.parseElementFilter('div [foo]');
     });
 
-    assert.throws(function() {
+    assert.throws(() => {
       MutationSummary.parseElementFilter('div[foo');
     });
 
-    assert.throws(function() {
+    assert.throws(() => {
       MutationSummary.parseElementFilter('divfoo]');
     });
 
@@ -244,19 +244,19 @@ suite('Setup', function() {
       ['div[foo="boo"]', 'span[bar="baz"]']
     );
 
-    assert.throws(function() {
+    assert.throws(() => {
       MutationSummary.parseElementFilter('div[foo="bar ]');
     });
 
-    assert.throws(function() {
+    assert.throws(() => {
       MutationSummary.parseElementFilter('div[foo=bar"baz]');
     });
 
-    assert.throws(function() {
+    assert.throws(() => {
       MutationSummary.parseElementFilter('div[foo=bar baz]');
     });
 
-    assert.throws(function() {
+    assert.throws(() => {
       MutationSummary.parseElementFilter('div[foo|=bar]');
     });
 
@@ -270,11 +270,11 @@ suite('Setup', function() {
       ['div[foo~="bar  "]']
     );
 
-    assert.throws(function() {
+    assert.throws(() => {
       MutationSummary.parseElementFilter('div[foo~=]');
     });
 
-    assert.throws(function() {
+    assert.throws(() => {
       MutationSummary.parseElementFilter('div[foo~ =bar]');
     });
 
@@ -290,9 +290,9 @@ suite('Setup', function() {
   });
 
 
-  test('Options Validation', function() {
+  test('Options Validation', () => {
     // Unknown option.
-    assert.throws(function() {
+    assert.throws(() => {
       new MutationSummary({
         blarg: true,
         callback: function() {},
@@ -301,28 +301,28 @@ suite('Setup', function() {
     });
 
     // callback is required.
-    assert.throws(function() {
+    assert.throws(() => {
       new MutationSummary({
         queries: [{ all: true }]
       });
     });
 
     // callback must be a function.
-    assert.throws(function() {
+    assert.throws(() => {
       new MutationSummary({
         callback: 'foo'
       });
     });
 
     // queries is required.
-    assert.throws(function() {
+    assert.throws(() => {
       new MutationSummary({
         callback: function() {},
       });
     });
 
     // queries must contain at least one query request.
-    assert.throws(function() {
+    assert.throws(() => {
       new MutationSummary({
         callback: function() {},
         queries: []
@@ -336,7 +336,7 @@ suite('Setup', function() {
     });
 
     // all doesn't allow options.
-    assert.throws(function() {
+    assert.throws(() => {
       new MutationSummary({
         callback: function() {},
         queries: [{ all: true, foo: false }]
@@ -350,7 +350,7 @@ suite('Setup', function() {
     });
 
     // attribute doesn't allow options.
-    assert.throws(function() {
+    assert.throws(() => {
       new MutationSummary({
         callback: function() {},
         queries: [{ attribute: "foo", bar: false }]
@@ -358,7 +358,7 @@ suite('Setup', function() {
     });
 
     // attribute must be a string.
-    assert.throws(function() {
+    assert.throws(() => {
       new MutationSummary({
         callback: function() {},
         queries: [{ attribute: 1 }]
@@ -366,7 +366,7 @@ suite('Setup', function() {
     });
 
     // attribute must be non-zero length.
-    assert.throws(function() {
+    assert.throws(() => {
       new MutationSummary({
         callback: function() {},
         queries: [{ attribute: '  ' }]
@@ -374,7 +374,7 @@ suite('Setup', function() {
     });
 
     // attribute must names must be valid.
-    assert.throws(function() {
+    assert.throws(() => {
       new MutationSummary({
         callback: function() {},
         queries: [{ attribute: '1foo' }]
@@ -382,7 +382,7 @@ suite('Setup', function() {
     });
 
     // attribute must contain only one attribute.
-    assert.throws(function() {
+    assert.throws(() => {
       new MutationSummary({
         callback: function() {},
         queries: [{ attribute: 'foo bar' }]
@@ -415,7 +415,7 @@ suite('Setup', function() {
     });
 
     // elementFilter doesn't support descendant selectors.
-    assert.throws(function() {
+    assert.throws(() => {
       new MutationSummary({
         callback: function() {},
         queries: [{ element: 'div span[foo]' }]
@@ -423,7 +423,7 @@ suite('Setup', function() {
     });
 
     // elementFilter must contain at least one item
-    assert.throws(function() {
+    assert.throws(() => {
       new MutationSummary({
         callback: function() {},
         queries: [{ element: '' }]
@@ -431,7 +431,7 @@ suite('Setup', function() {
     });
 
     // Invalid element syntanx.
-    assert.throws(function() {
+    assert.throws(() => {
       new MutationSummary({
         callback: function() {},
         queries: [{ element: 'div[noTrailingBracket', }]
@@ -439,7 +439,7 @@ suite('Setup', function() {
     });
 
     // Invalid element option
-    assert.throws(function() {
+    assert.throws(() => {
       new MutationSummary({
         callback: function() {},
         queries: [{ element: 'div[foo]', foo: true }]
@@ -447,7 +447,7 @@ suite('Setup', function() {
     });
 
     // elememtAttribute must contain valid attribute names
-    assert.throws(function() {
+    assert.throws(() => {
       new MutationSummary({
         callback: function() {},
         queries: [{ element: 'div[foo]', elementAttributes: 'foo 1bar' }]
@@ -455,7 +455,7 @@ suite('Setup', function() {
     });
 
     // Invalid element option 2.
-    assert.throws(function() {
+    assert.throws(() => {
       new MutationSummary({
         callback: function() {},
         queries: [{ element: 'div[foo]', elementAttributes: 'foo', foo: true }]
@@ -469,7 +469,7 @@ suite('Setup', function() {
     });
 
     // Invalid characterData option.
-    assert.throws(function() {
+    assert.throws(() => {
       new MutationSummary({
         callback: function() {},
         queries: [{ characterData: true, foo: true }]
@@ -477,7 +477,7 @@ suite('Setup', function() {
     });
 
     // Invalid query request.
-    assert.throws(function() {
+    assert.throws(() => {
       new MutationSummary({
         callback: function() {},
         queries: [{  }]
@@ -485,7 +485,7 @@ suite('Setup', function() {
     });
 
     // Invalid query request.
-    assert.throws(function() {
+    assert.throws(() => {
       new MutationSummary({
         callback: function() {},
         queries: [{ foo: true  }]
@@ -493,7 +493,7 @@ suite('Setup', function() {
     });
 
     // Disallow listening to multiple 'cases' of the same attribute.
-    assert.throws(function() {
+    assert.throws(() => {
       new MutationSummary({
         callback: function() {},
         queries: [{ element: 'a', elementAttributes: 'Bar bar' }]

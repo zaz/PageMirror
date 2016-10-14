@@ -14,7 +14,7 @@
 
 var receiverURL = 'ws://' + location.host + '/receiver';
 
-window.addEventListener('DOMContentLoaded', function() {
+window.addEventListener('DOMContentLoaded', () => {
   var base;
 
   var mirror = new TreeMirror(document, {
@@ -51,10 +51,10 @@ window.addEventListener('DOMContentLoaded', function() {
       mirror[msg.f].apply(mirror, msg.args);
   }
 
-  socket.onmessage = function(event) {
+  socket.onmessage = event => {
     var msg = JSON.parse(event.data);
     if (msg instanceof Array) {
-      msg.forEach(function(subMessage) {
+      msg.forEach(subMessage => {
         handleMessage(JSON.parse(subMessage));
       });
     } else {
@@ -62,7 +62,7 @@ window.addEventListener('DOMContentLoaded', function() {
     }
   }
 
-  socket.onclose = function() {
+  socket.onclose = () => {
     socket = new WebSocket(receiverURL);
   }
 });

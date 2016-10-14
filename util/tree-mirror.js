@@ -1,5 +1,5 @@
 ///<reference path='../src/mutation-summary.ts'/>
-var TreeMirror = (function () {
+var TreeMirror = ((() => {
     function TreeMirror(root, delegate) {
         this.root = root;
         this.delegate = delegate;
@@ -16,27 +16,27 @@ var TreeMirror = (function () {
         // to a parent which is presently an ancestor of the parent. This can occur
         // based on random ordering of moves. The way we handle this is to first
         // remove all changed nodes from their parents, then apply.
-        addedOrMoved.forEach(function (data) {
+        addedOrMoved.forEach(data => {
             var node = _this.deserializeNode(data);
             var parent = _this.deserializeNode(data.parentNode);
             var previous = _this.deserializeNode(data.previousSibling);
             if (node.parentNode)
                 node.parentNode.removeChild(node);
         });
-        removed.forEach(function (data) {
+        removed.forEach(data => {
             var node = _this.deserializeNode(data);
             if (node.parentNode)
                 node.parentNode.removeChild(node);
         });
-        addedOrMoved.forEach(function (data) {
+        addedOrMoved.forEach(data => {
             var node = _this.deserializeNode(data);
             var parent = _this.deserializeNode(data.parentNode);
             var previous = _this.deserializeNode(data.previousSibling);
             parent.insertBefore(node, previous ? previous.nextSibling : parent.firstChild);
         });
-        attributes.forEach(function (data) {
+        attributes.forEach(data => {
             var node = _this.deserializeNode(data);
-            Object.keys(data.attributes).forEach(function (attrName) {
+            Object.keys(data.attributes).forEach(attrName => {
                 var newVal = data.attributes[attrName];
                 if (newVal === null) {
                     node.removeAttribute(attrName);
@@ -50,11 +50,11 @@ var TreeMirror = (function () {
                 }
             });
         });
-        text.forEach(function (data) {
+        text.forEach(data => {
             var node = _this.deserializeNode(data);
             node.textContent = data.textContent;
         });
-        removed.forEach(function (node) {
+        removed.forEach(node => {
             delete _this.idMap[node.id];
         });
     };
@@ -83,7 +83,7 @@ var TreeMirror = (function () {
                     node = this.delegate.createElement(nodeData.tagName);
                 if (!node)
                     node = doc.createElement(nodeData.tagName);
-                Object.keys(nodeData.attributes).forEach(function (name) {
+                Object.keys(nodeData.attributes).forEach(name => {
                     if (!_this.delegate ||
                         !_this.delegate.setAttribute ||
                         !_this.delegate.setAttribute(node, name, nodeData.attributes[name])) {
@@ -105,6 +105,7 @@ var TreeMirror = (function () {
     };
     return TreeMirror;
 })();
+
 var TreeMirrorClient = (function () {
     function TreeMirrorClient(target, mirror, testingQueries) {
         var _this = this;
@@ -186,7 +187,7 @@ var TreeMirrorClient = (function () {
         var _this = this;
         var all = added.concat(reparented).concat(reordered);
         var parentMap = new MutationSummary.NodeMap();
-        all.forEach(function (node) {
+        all.forEach(node => {
             var parent = node.parentNode;
             var children = parentMap.get(parent);
             if (!children) {
@@ -196,7 +197,7 @@ var TreeMirrorClient = (function () {
             children.set(node, true);
         });
         var moved = [];
-        parentMap.keys().forEach(function (parent) {
+        parentMap.keys().forEach(parent => {
             var children = parentMap.get(parent);
             var keys = children.keys();
             while (keys.length) {
@@ -219,8 +220,8 @@ var TreeMirrorClient = (function () {
     TreeMirrorClient.prototype.serializeAttributeChanges = function (attributeChanged) {
         var _this = this;
         var map = new MutationSummary.NodeMap();
-        Object.keys(attributeChanged).forEach(function (attrName) {
-            attributeChanged[attrName].forEach(function (element) {
+        Object.keys(attributeChanged).forEach(attrName => {
+            attributeChanged[attrName].forEach(element => {
                 var record = map.get(element);
                 if (!record) {
                     record = _this.serializeNode(element);
@@ -230,27 +231,23 @@ var TreeMirrorClient = (function () {
                 record.attributes[attrName] = element.getAttribute(attrName);
             });
         });
-        return map.keys().map(function (node) {
-            return map.get(node);
-        });
+        return map.keys().map(node => map.get(node));
     };
     TreeMirrorClient.prototype.applyChanged = function (summaries) {
         var _this = this;
         var summary = summaries[0];
-        var removed = summary.removed.map(function (node) {
-            return _this.serializeNode(node);
-        });
+        var removed = summary.removed.map(node => _this.serializeNode(node));
         var moved = this.serializeAddedAndMoved(summary.added, summary.reparented, summary.reordered);
         var attributes = this.serializeAttributeChanges(summary.attributeChanged);
-        var text = summary.characterDataChanged.map(function (node) {
+        var text = summary.characterDataChanged.map(node => {
             var data = _this.serializeNode(node);
             data.textContent = node.textContent;
             return data;
         });
         this.mirror.applyChanged(removed, moved, attributes, text);
-        summary.removed.forEach(function (node) {
+        summary.removed.forEach(node => {
             _this.forgetNode(node);
         });
     };
     return TreeMirrorClient;
-})();
+}))();
