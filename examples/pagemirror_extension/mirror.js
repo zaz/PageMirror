@@ -3,11 +3,9 @@ var initiated = false
 
 WebSocket.prototype.sendJSON = function(m) { this.send(JSON.stringify(m)) }
 
-window.addEventListener('DOMContentLoaded', () => {
-  console.log('DOMContentLoaded')
+$( () => {
   if (typeof WebKitMutationObserver !== 'function') {
-    var h3 = document.body.appendChild(document.createElement('h3'));
-    h3.textContent = 'PageMirror requires MutationObserver.';
+    $("body").append($("<h3>").text("PageMirror requires MutationObserver."))
     throw Error('PageMirror requires MutationObserver.');
   }
 
@@ -22,9 +20,7 @@ window.addEventListener('DOMContentLoaded', () => {
   var mirror = new TreeMirror(document, {
     createElement: tagName => {
       if (tagName == 'SCRIPT') {
-        var node = document.createElement('NO-SCRIPT');
-        node.style.display = 'none';
-        return node;
+        return $("<no-script>").css("display", "none")[0]
       }
     }
   });

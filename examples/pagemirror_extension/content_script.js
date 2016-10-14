@@ -8,15 +8,10 @@ if (typeof WebKitMutationObserver != 'function') {
 
 chrome.runtime.onMessage.addListener( server => {
 
-  if (document.getElementsByTagName("base").length < 1) {
-    fh = document.head.firstChild
-    if (fh) {
-      base = document.head.insertBefore(document.createElement("base"), fh)
-    } else {
-      base = document.head.appendChild(document.createElement("base"))
-    }
-    base.href = location.href.match(/^(.*\/)[^\/]*$/)[1]
-    console.log(base.href)
+  if ($("base").length < 1) {
+    base = location.href.match(/^(.*\/)[^\/]*$/)[1]
+    $("head").prepend($("<base>").attr("href", base))
+    console.log('Added <base href="' + base.href + '">')
   }
 
   sock = new WebSocket(server);
