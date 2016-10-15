@@ -35,7 +35,6 @@ $( () => {
     sock.onmessage = (m) => {
       try { d = JSON.parse(m.data) }
       catch (err) { return }
-      console.log(d)
       if (d.f)
         mirror[d.f].apply(mirror, d.args);
     };

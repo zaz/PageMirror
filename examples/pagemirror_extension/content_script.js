@@ -8,21 +8,20 @@ if (typeof WebKitMutationObserver != 'function') {
 
 chrome.runtime.onMessage.addListener( server => {
 
+  // Add <base> so the recipient can download necessary CSS, images, &c.
   if ($("base").length < 1) {
     base = location.href.match(/^(.*\/)[^\/]*$/)[1]
     $("head").prepend($("<base>").attr("href", base))
-    console.log('Added <base href="' + base.href + '">')
+    console.log('Added <base href="' + base + '">')
   }
 
   sock = new WebSocket(server);
   sock.onopen = () => {
     sock.sendJSON({id: "bob"})
   }
-  sock.onmessage = (m) => {
-    // XXX check this area of code
+  sock.onmessage = m => {
     try { d = JSON.parse(m.data) }
     catch (err) { return; }
-    console.log(d)
     if (! d.begin) { return; }
 
     var mirrorClient = new TreeMirrorClient(document, {
