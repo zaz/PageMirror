@@ -14,11 +14,11 @@
 
 var receiverURL = 'ws://' + location.host + '/receiver';
 
-window.addEventListener('DOMContentLoaded', function() {
+window.addEventListener('DOMContentLoaded', () => {
   var base;
 
   var mirror = new TreeMirror(document, {
-    createElement: function(tagName) {
+    createElement(tagName) {
       if (tagName == 'SCRIPT') {
         var node = document.createElement('NO-SCRIPT');
         node.style.display = 'none';
@@ -48,13 +48,13 @@ window.addEventListener('DOMContentLoaded', function() {
     else if (msg.base)
       base = msg.base;
     else
-      mirror[msg.f].apply(mirror, msg.args);
+      mirror[msg.f](...msg.args);
   }
 
-  socket.onmessage = function(event) {
+  socket.onmessage = event => {
     var msg = JSON.parse(event.data);
     if (msg instanceof Array) {
-      msg.forEach(function(subMessage) {
+      msg.forEach(subMessage => {
         handleMessage(JSON.parse(subMessage));
       });
     } else {
@@ -62,7 +62,7 @@ window.addEventListener('DOMContentLoaded', function() {
     }
   }
 
-  socket.onclose = function() {
+  socket.onclose = () => {
     socket = new WebSocket(receiverURL);
   }
 });

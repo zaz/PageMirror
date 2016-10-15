@@ -20,8 +20,8 @@ function socketSend(msg) {
   socket.send(JSON.stringify(msg));
 }
 
-window.addEventListener('load', function() {
-  chrome.extension.sendMessage({ mirror : true}, function(response) {
+window.addEventListener('load', () => {
+  chrome.extension.sendMessage({ mirror : true}, response => {
     if (response.mirror)
       startMirroring();
     else
@@ -36,17 +36,17 @@ function startMirroring() {
   socket = new WebSocket(serverURL);
   var mirrorClient;
 
-  socket.onopen = function() {
+  socket.onopen = () => {
     socketSend({ base: location.href.match(/^(.*\/)[^\/]*$/)[1] });
     mirrorClient = new TreeMirrorClient(document, {
-      initialize: function(rootId, children) {
+      initialize(rootId, children) {
         socketSend({
           f: 'initialize',
           args: [rootId, children]
         });
       },
 
-      applyChanged: function(removed, addedOrMoved, attributes, text) {
+      applyChanged(removed, addedOrMoved, attributes, text) {
         socketSend({
           f: 'applyChanged',
           args: [removed, addedOrMoved, attributes, text]
@@ -55,7 +55,7 @@ function startMirroring() {
     });
   }
 
-  socket.onclose = function() {
+  socket.onclose = () => {
     mirrorClient.disconnect();
     socket = undefined;
   }

@@ -18,18 +18,18 @@ if (typeof WebKitMutationObserver != 'function') {
   throw Error('PageMirror requires MutationObserver.');
 }
 
-chrome.extension.onConnect.addListener(function(port) {
+chrome.extension.onConnect.addListener(port => {
   port.postMessage({ base: location.href.match(/^(.*\/)[^\/]*$/)[1] });
 
   var mirrorClient = new TreeMirrorClient(document, {
-    initialize: function(rootId, children) {
+    initialize: (rootId, children) => {
       port.postMessage({
         f: 'initialize',
         args: [rootId, children]
       });
     },
 
-    applyChanged: function(removed, addedOrMoved, attributes, text) {
+    applyChanged: (removed, addedOrMoved, attributes, text) => {
       port.postMessage({
         f: 'applyChanged',
         args: [removed, addedOrMoved, attributes, text]
@@ -37,7 +37,7 @@ chrome.extension.onConnect.addListener(function(port) {
     }
   });
 
-  port.onDisconnect.addListener(function() {
+  port.onDisconnect.addListener(() => {
     mirrorClient.disconnect();
   });
 });

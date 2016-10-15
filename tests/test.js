@@ -4,25 +4,25 @@
 function compareNodeArrayIgnoreOrder(expected, actual) {
     assert.strictEqual(expected.length, actual.length);
     var map = new MutationSummary.NodeMap();
-    expected.forEach(function (node) {
+    expected.forEach(node => {
         map.set(node, true);
     });
-    actual.forEach(function (node) {
+    actual.forEach(node => {
         assert.isTrue(map.has(node));
     });
 }
-suite('Mutation Summary', function () {
+suite('Mutation Summary', () => {
     var testDiv;
     var observer;
     var observing;
     var changed;
     var query;
     var options;
-    setup(function () {
+    setup(() => {
         testDiv = document.getElementById('test-div');
         testDiv['__id__'] = 1;
     });
-    teardown(function () {
+    teardown(() => {
         stopObserving();
         testDiv.textContent = '';
     });
@@ -30,13 +30,13 @@ suite('Mutation Summary', function () {
         query = q || { all: true };
         options = {
             rootNode: testDiv,
-            callback: function () {
+            callback() {
                 throw 'Mutation Delivered at end of microtask';
             },
             queries: [query]
         };
         if (extraOptions) {
-            Object.keys(extraOptions).forEach(function (key) {
+            Object.keys(extraOptions).forEach(key => {
                 options[key] = extraOptions[key];
             });
         }
@@ -60,7 +60,7 @@ suite('Mutation Summary', function () {
         compareNodeArrayIgnoreOrder(expect.added, changed.added);
         compareNodeArrayIgnoreOrder(expect.removed, changed.removed);
         if (options.oldPreviousSibling) {
-            expect.removed.forEach(function (node, index) {
+            expect.removed.forEach((node, index) => {
                 assert.strictEqual(expect.removedOldPreviousSibling[index], changed.getOldPreviousSibling(node));
             });
         }
@@ -69,7 +69,7 @@ suite('Mutation Summary', function () {
             assert(typeof expect.reparented === typeof changed.reparented);
             compareNodeArrayIgnoreOrder(expect.reparented, changed.reparented);
             if (options.oldPreviousSibling) {
-                expect.reparented.forEach(function (node, index) {
+                expect.reparented.forEach((node, index) => {
                     assert.strictEqual(expect.reparentedOldPreviousSibling[index], changed.getOldPreviousSibling(node));
                 });
             }
@@ -81,7 +81,7 @@ suite('Mutation Summary', function () {
         if (query.all) {
             assert(typeof expect.reordered == typeof changed.reordered);
             compareNodeArrayIgnoreOrder(expect.reordered, changed.reordered);
-            expect.reordered.forEach(function (node, index) {
+            expect.reordered.forEach((node, index) => {
                 assert.strictEqual(expect.reorderedOldPreviousSibling[index], changed.getOldPreviousSibling(node));
             });
         }
@@ -93,7 +93,7 @@ suite('Mutation Summary', function () {
             assert(typeof expect.valueChanged == typeof changed.valueChanged);
             compareNodeArrayIgnoreOrder(expect.valueChanged, changed.valueChanged);
             var getOldFunction = query.attribute ? 'getOldAttribute' : 'getOldCharacterData';
-            expect.valueChanged.forEach(function (node, index) {
+            expect.valueChanged.forEach((node, index) => {
                 assert.strictEqual(expect.oldValues[index], changed[getOldFunction](node, query.attribute));
             });
         }
@@ -104,9 +104,9 @@ suite('Mutation Summary', function () {
         if (query.all || query.elementAttributes) {
             assert(typeof expect.attributeChanged == typeof changed.attributeChanged);
             assert.strictEqual(Object.keys(expect.attributeChanged).length, Object.keys(changed.attributeChanged).length);
-            Object.keys(expect.attributeChanged).forEach(function (attrName) {
+            Object.keys(expect.attributeChanged).forEach(attrName => {
                 compareNodeArrayIgnoreOrder(expect.attributeChanged[attrName], changed.attributeChanged[attrName]);
-                expect.attributeOldValue[attrName].forEach(function (attrOldValue, index) {
+                expect.attributeOldValue[attrName].forEach((attrOldValue, index) => {
                     assert.strictEqual(expect.attributeOldValue[attrName][index], changed.getOldAttribute(expect.attributeChanged[attrName][index], attrName));
                 });
             });
@@ -118,7 +118,7 @@ suite('Mutation Summary', function () {
     function assertNothingReported() {
         assert.isUndefined(observer.takeSummaries());
     }
-    test('Disconnect and Reconnect', function () {
+    test('Disconnect and Reconnect', () => {
         var div = document.createElement('div');
         testDiv.appendChild(div);
         div.setAttribute('foo', '1');
@@ -142,7 +142,7 @@ suite('Mutation Summary', function () {
             attributeOldValue: { 'foo': ['2'], 'bar': [] }
         });
     });
-    test('Attribute Basic', function () {
+    test('Attribute Basic', () => {
         var div = document.createElement('div');
         testDiv.appendChild(div);
         div.setAttribute('foo', 'bar');
@@ -176,7 +176,7 @@ suite('Mutation Summary', function () {
         div2.setAttribute('foo', 'baz2');
         assertNothingReported();
     });
-    test('Attribute -- Array proto changed', function () {
+    test('Attribute -- Array proto changed', () => {
         Array.prototype.foo = 'bar';
         var div = document.createElement('div');
         testDiv.appendChild(div);
@@ -212,7 +212,7 @@ suite('Mutation Summary', function () {
         assertNothingReported();
         delete Array.prototype.foo;
     });
-    test('Attribute Case Insensitive', function () {
+    test('Attribute Case Insensitive', () => {
         var div = document.createElement('div');
         testDiv.appendChild(div);
         div.setAttribute('foo', 'bar');
@@ -246,7 +246,7 @@ suite('Mutation Summary', function () {
         div2.setAttribute('foo', 'baz2');
         assertNothingReported();
     });
-    test('CharacterData Basic', function () {
+    test('CharacterData Basic', () => {
         var div = document.createElement('div');
         testDiv.appendChild(div);
         div.innerHTML = 'foo';
@@ -287,7 +287,7 @@ suite('Mutation Summary', function () {
             oldValues: []
         });
     });
-    test('Element Basic', function () {
+    test('Element Basic', () => {
         startObserving({
             element: 'div, A, p'
         });
@@ -301,7 +301,7 @@ suite('Mutation Summary', function () {
         testDiv.appendChild(div);
         assertNothingReported();
     });
-    test('Element Attribute Specified', function () {
+    test('Element Attribute Specified', () => {
         startObserving({
             element: 'div[foo], A, *[bar], div[ baz = "bat"], span#foo[blow~=blarg]'
         });
@@ -336,7 +336,7 @@ suite('Mutation Summary', function () {
         div3.setAttribute('baz', 'bat');
         assertNothingReported();
     });
-    test('Case Insensitive Element Attributes', function () {
+    test('Case Insensitive Element Attributes', () => {
         var div = document.createElement('div');
         testDiv.appendChild(div);
         startObserving({
@@ -350,7 +350,7 @@ suite('Mutation Summary', function () {
             attributeOldValue: { 'foo': [null], 'BAR': [null] }
         });
     });
-    test('Element HTMLCaseInsensitive2', function () {
+    test('Element HTMLCaseInsensitive2', () => {
         startObserving({
             element: 'DIV[foo], A, *[bar], div[ BaZ = "bat"], span#foo[Blow~=blarg]',
             elementAttributes: 'FOO'
@@ -389,7 +389,7 @@ suite('Mutation Summary', function () {
         div3.setAttribute('baz', 'bat');
         assertNothingReported();
     });
-    test('Element SVGCaseSensitive', function () {
+    test('Element SVGCaseSensitive', () => {
         var docType = document.implementation.createDocumentType("svg", "-//W3C//DTD SVG 1.1//EN", null);
         var svgDoc = document.implementation.createDocument('http://www.w3.org/2000/svg', 'svg', docType);
         testDiv = svgDoc.createElement('div');
@@ -435,7 +435,7 @@ suite('Mutation Summary', function () {
         div3.setAttribute('baz', 'bat');
         assertNothingReported();
     });
-    test('Element ElementAttributes', function () {
+    test('Element ElementAttributes', () => {
         var div = document.createElement('div');
         testDiv.appendChild(div);
         div.setAttribute('foo', 'bar');
@@ -475,7 +475,7 @@ suite('Mutation Summary', function () {
         div.setAttribute('foo', 'bar2');
         assertNothingReported();
     });
-    test('Element With Classname', function () {
+    test('Element With Classname', () => {
         var div = document.createElement('div');
         testDiv.appendChild(div);
         div.setAttribute('class', 'foo');
@@ -506,7 +506,7 @@ suite('Mutation Summary', function () {
         div3.setAttribute('class', 'foo bar');
         assertNothingReported();
     });
-    test('NoValidator', function () {
+    test('NoValidator', () => {
         var validator = MutationSummary.createQueryValidator;
         MutationSummary.createQueryValidator = undefined;
         startObserving();
@@ -523,7 +523,7 @@ suite('Mutation Summary', function () {
         });
         MutationSummary.createQueryValidator = validator;
     });
-    test('Add Remove Basic', function () {
+    test('Add Remove Basic', () => {
         startObserving();
         var div = document.createElement('div');
         testDiv.appendChild(div);
@@ -537,7 +537,7 @@ suite('Mutation Summary', function () {
             removed: [span],
         });
     });
-    test('Sequential Removals', function () {
+    test('Sequential Removals', () => {
         var div = document.createElement('div');
         testDiv.appendChild(div);
         startObserving();
@@ -551,7 +551,7 @@ suite('Mutation Summary', function () {
             removed: [div]
         });
     });
-    test('Add And Remove Outside Tree', function () {
+    test('Add And Remove Outside Tree', () => {
         var div1 = document.createElement('div');
         testDiv.appendChild(div1);
         var div2 = document.createElement('div');
@@ -571,7 +571,7 @@ suite('Mutation Summary', function () {
         div1.appendChild(document.createElement('span'));
         assertNothingReported();
     });
-    test('Add Outside Of Tree And Reinsert', function () {
+    test('Add Outside Of Tree And Reinsert', () => {
         var div1 = testDiv.appendChild(document.createElement('div'));
         startObserving();
         testDiv.removeChild(div1);
@@ -583,7 +583,7 @@ suite('Mutation Summary', function () {
             added: [span]
         });
     });
-    test('Reparented', function () {
+    test('Reparented', () => {
         var div1 = testDiv.appendChild(document.createElement('div'));
         var div2 = div1.appendChild(document.createElement('div'));
         var span = div2.appendChild(document.createElement('span'));
@@ -596,7 +596,7 @@ suite('Mutation Summary', function () {
             reparented: [div2]
         });
     });
-    test('Adding To Detached Subtree', function () {
+    test('Adding To Detached Subtree', () => {
         var div1 = testDiv.appendChild(document.createElement('div'));
         startObserving();
         testDiv.removeChild(div1);
@@ -606,7 +606,7 @@ suite('Mutation Summary', function () {
             removed: [div1]
         });
     });
-    test('Reorder Inside Tree', function () {
+    test('Reorder Inside Tree', () => {
         var div1 = testDiv.appendChild(document.createElement('div'));
         var div2 = div1.appendChild(document.createElement('div'));
         var div3 = div2.appendChild(document.createElement('div'));
@@ -621,7 +621,7 @@ suite('Mutation Summary', function () {
             reparented: [div1, div2, div3]
         });
     });
-    test('Removed Old Previous Sibling', function () {
+    test('Removed Old Previous Sibling', () => {
         var div1 = testDiv.appendChild(document.createElement('div'));
         var div2 = testDiv.appendChild(document.createElement('div'));
         var div3 = testDiv.appendChild(document.createElement('div'));
@@ -636,7 +636,7 @@ suite('Mutation Summary', function () {
             removedOldPreviousSibling: [null, div1, div2, null, div4]
         });
     });
-    test('Reorder Inside Tree And Add Middle', function () {
+    test('Reorder Inside Tree And Add Middle', () => {
         var div1 = testDiv.appendChild(document.createElement('div'));
         var div2 = div1.appendChild(document.createElement('div'));
         var div3 = div2.appendChild(document.createElement('div'));
@@ -654,7 +654,7 @@ suite('Mutation Summary', function () {
             reparented: [div1, div2, div3]
         });
     });
-    test('Reorder Outside Tree', function () {
+    test('Reorder Outside Tree', () => {
         var div1 = document.createElement('div');
         var div2 = div1.appendChild(document.createElement('div'));
         var div3 = div2.appendChild(document.createElement('div'));
@@ -665,7 +665,7 @@ suite('Mutation Summary', function () {
         div2.appendChild(div1);
         assertNothingReported();
     });
-    test('Reorder And Remove From Tree', function () {
+    test('Reorder And Remove From Tree', () => {
         var div1 = testDiv.appendChild(document.createElement('div'));
         var div2 = div1.appendChild(document.createElement('div'));
         var div3 = div2.appendChild(document.createElement('div'));
@@ -679,7 +679,7 @@ suite('Mutation Summary', function () {
             removed: [div1, div2, div3]
         });
     });
-    test('Reorder And Remove Subtree', function () {
+    test('Reorder And Remove Subtree', () => {
         var div1 = testDiv.appendChild(document.createElement('div'));
         var div2 = div1.appendChild(document.createElement('div'));
         startObserving();
@@ -692,7 +692,7 @@ suite('Mutation Summary', function () {
             removed: [div1]
         });
     });
-    test('Reorder Outside And Add To Tree', function () {
+    test('Reorder Outside And Add To Tree', () => {
         var div1 = document.createElement('div');
         var div2 = div1.appendChild(document.createElement('div'));
         var div3 = div2.appendChild(document.createElement('div'));
@@ -706,7 +706,7 @@ suite('Mutation Summary', function () {
             added: [div1, div2, div3]
         });
     });
-    test('Reorder Outside And Add Subtree', function () {
+    test('Reorder Outside And Add Subtree', () => {
         var div1 = document.createElement('div');
         var div2 = div1.appendChild(document.createElement('div'));
         startObserving();
@@ -717,7 +717,7 @@ suite('Mutation Summary', function () {
             added: [div1, div2]
         });
     });
-    test('Remove Subtree And Add To External', function () {
+    test('Remove Subtree And Add To External', () => {
         var div1 = testDiv.appendChild(document.createElement('div'));
         var div2 = div1.appendChild(document.createElement('div'));
         var div3 = document.createElement('div');
@@ -731,7 +731,7 @@ suite('Mutation Summary', function () {
     function insertAfter(parent, node, refNode) {
         return parent.insertBefore(node, refNode ? refNode.nextSibling : parent.firstChild);
     }
-    test('Move', function () {
+    test('Move', () => {
         var divA = document.createElement('div');
         testDiv.appendChild(divA);
         divA.id = 'a';
@@ -754,7 +754,7 @@ suite('Mutation Summary', function () {
             reorderedOldPreviousSibling: [divC, divB, divA]
         });
     });
-    test('Move2', function () {
+    test('Move2', () => {
         var divA = document.createElement('div');
         testDiv.appendChild(divA);
         divA.id = 'a';
@@ -773,7 +773,7 @@ suite('Mutation Summary', function () {
             reorderedOldPreviousSibling: [null, divA]
         });
     });
-    test('Move Detect Noop', function () {
+    test('Move Detect Noop', () => {
         var divA = document.createElement('div');
         testDiv.appendChild(divA);
         divA.id = 'a';
@@ -811,7 +811,7 @@ suite('Mutation Summary', function () {
         insertAfter(testDiv, divD, divA);
         assertNothingReported();
     });
-    test('Move Detect Noop Simple', function () {
+    test('Move Detect Noop Simple', () => {
         var divA = document.createElement('div');
         testDiv.appendChild(divA);
         divA.id = 'a';
@@ -828,13 +828,13 @@ suite('Mutation Summary', function () {
             reorderedOldPreviousSibling: [null]
         });
     });
-    test('Ignore Own Changes', function (async) {
+    test('Ignore Own Changes', async => {
         var div;
         var count = 0;
         var summary1 = new MutationSummary({
             observeOwnChanges: false,
             queries: [{ all: true }],
-            callback: function (summaries) {
+            callback(summaries) {
                 var summary = summaries[0];
                 count++;
                 if (count == 1) {
@@ -856,7 +856,7 @@ suite('Mutation Summary', function () {
         var summary2 = new MutationSummary({
             observeOwnChanges: false,
             queries: [{ all: true }],
-            callback: function (summaries) {
+            callback(summaries) {
                 var summary = summaries[0];
                 count++;
                 if (count == 1) {
@@ -877,20 +877,20 @@ suite('Mutation Summary', function () {
         });
         testDiv.appendChild(document.createElement('div'));
     });
-    test('Disconnect During Callback', function (async) {
+    test('Disconnect During Callback', async => {
         var div = document.createElement('div');
         var callbackCount = 0;
         var summary = new MutationSummary({
             queries: [{ all: true }],
             rootNode: div,
-            callback: function (summaries) {
+            callback(summaries) {
                 callbackCount++;
                 if (callbackCount > 1)
                     return;
                 summary.disconnect();
-                setTimeout(function () {
+                setTimeout(() => {
                     div.setAttribute('bar', 'baz');
-                    setTimeout(function () {
+                    setTimeout(() => {
                         assert.strictEqual(1, callbackCount);
                         async();
                     });
@@ -900,9 +900,9 @@ suite('Mutation Summary', function () {
         div.setAttribute('foo', 'bar');
     });
 });
-suite('TreeMirror Fuzzer', function () {
+suite('TreeMirror Fuzzer', () => {
     var testDiv;
-    setup(function () {
+    setup(() => {
         testDiv = document.createElement('div');
         testDiv.id = 'test-div';
     });

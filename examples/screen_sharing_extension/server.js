@@ -12,17 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-var WebSocket = require('faye-websocket');
-var http      = require('http');
-var fs        = require('fs');
+import WebSocket from 'faye-websocket';
+
+import http from 'http';
+import fs from 'fs';
 
 var server = http.createServer();
 
-fs.readFile('mirror.html', function(err, mirrorHTML) {
-  fs.readFile('mirror.js', function(err, mirrorJS) {
-    fs.readFile('tree-mirror.js', function(err, treeMirrorJS) {
+fs.readFile('mirror.html', (err, mirrorHTML) => {
+  fs.readFile('mirror.js', (err, mirrorJS) => {
+    fs.readFile('tree-mirror.js', (err, treeMirrorJS) => {
 
-      server.addListener('request', function(request, response) {
+      server.addListener('request', (request, response) => {
         if (request.url == '/mirror.html' || request.url == '/' || request.url == '/index.html') {
           response.writeHead(200, {'Content-Type': 'text/html'});
           response.end(mirrorHTML);
@@ -51,7 +52,7 @@ var messages = [];
 var receivers = [];
 var projector;
 
-server.addListener('upgrade', function(request, rawsocket, head) {
+server.addListener('upgrade', (request, rawsocket, head) => {
   var socket = new WebSocket(request, rawsocket, head);
 
   // Projector.
@@ -68,24 +69,24 @@ server.addListener('upgrade', function(request, rawsocket, head) {
 
     messages.push(JSON.stringify({ clear: true }));
 
-    receivers.forEach(function(socket) {
+    receivers.forEach(socket => {
       socket.send(messages[0]);
     });
 
 
-    socket.onmessage = function(event) {
+    socket.onmessage = event => {
       console.log('message received. now at ' + messages.length + ' . sending to ' + receivers.length);
-      receivers.forEach(function(receiver) {
+      receivers.forEach(receiver => {
         receiver.send(event.data);
       });
 
       messages.push(event.data);
     };
 
-    socket.onclose = function() {
+    socket.onclose = () => {
       console.log('projector closing, clearing messages');
       messages.length = 0;
-      receivers.forEach(function(socket) {
+      receivers.forEach(socket => {
         socket.send(JSON.stringify({ clear: true }));
       });
 
@@ -104,7 +105,7 @@ server.addListener('upgrade', function(request, rawsocket, head) {
     socket.send(JSON.stringify(messages));
 
 
-    socket.onclose = function() {
+    socket.onclose = () => {
       var index = receivers.indexOf(socket);
       receivers.splice(index, 1);
       console.log('receiver closed. now at ' + receivers.length);

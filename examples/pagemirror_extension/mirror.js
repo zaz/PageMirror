@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-window.addEventListener('DOMContentLoaded', function() {
+window.addEventListener('DOMContentLoaded', () => {
   if (typeof WebKitMutationObserver !== 'function') {
     var h3 = document.body.appendChild(document.createElement('h3'));
     h3.textContent = 'PageMirror requires MutationObserver.';
@@ -30,7 +30,7 @@ window.addEventListener('DOMContentLoaded', function() {
   var base;
 
   var mirror = new TreeMirror(document, {
-    createElement: function(tagName) {
+    createElement: tagName => {
       if (tagName == 'SCRIPT') {
         var node = document.createElement('NO-SCRIPT');
         node.style.display = 'none';
@@ -48,14 +48,14 @@ window.addEventListener('DOMContentLoaded', function() {
 
   var port = chrome.tabs.connect(tabId);
 
-  port.onMessage.addListener(function(msg) {
+  port.onMessage.addListener(msg => {
     if (msg.base)
       base = msg.base;
     else
       mirror[msg.f].apply(mirror, msg.args);
   });
 
-  port.onDisconnect.addListener(function(msg) {
+  port.onDisconnect.addListener(msg => {
     window.close();
   });
 });

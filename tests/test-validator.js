@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-MutationSummary.createQueryValidator = function(root, query) {
+MutationSummary.createQueryValidator = (root, query) => {
   var matchesSelector = 'matchesSelector';
   if ('webkitMatchesSelector' in Element.prototype)
     matchesSelector = 'webkitMatchesSelector';
@@ -35,7 +35,7 @@ MutationSummary.createQueryValidator = function(root, query) {
     }
 
     function allValidator(summary, stayed, old, current) {
-      summary.reordered.forEach(function(node) {
+      summary.reordered.forEach(node => {
         var oldPreviousSiblingMap = old.get(summary.getOldParentNode(node));
         assert.strictEqual(oldPreviousSiblingMap.get(node), summary.getOldPreviousSibling(node));
       });
@@ -54,13 +54,11 @@ MutationSummary.createQueryValidator = function(root, query) {
     }
 
     function textNodeValidator(summary, stayed, old, current) {
-      var changed = stayed.filter(function(node) {
-        return old.get(node) != current.get(node);
-      });
+      var changed = stayed.filter(node => old.get(node) != current.get(node));
 
       compareNodeArrayIgnoreOrder(changed, summary.valueChanged);
 
-      changed.forEach(function(node) {
+      changed.forEach(node => {
         assert.strictEqual(old.get(node), summary.getOldCharacterData(node));
       });
     }
@@ -78,13 +76,11 @@ MutationSummary.createQueryValidator = function(root, query) {
     }
 
     function attributeValidator(summary, stayed, old, current) {
-      var changed = stayed.filter(function(node) {
-        return old.get(node) != current.get(node);
-      });
+      var changed = stayed.filter(node => old.get(node) != current.get(node));
 
       compareNodeArrayIgnoreOrder(changed, summary.valueChanged);
 
-      changed.forEach(function(node) {
+      changed.forEach(node => {
         assert.strictEqual(old.get(node), summary.getOldAttribute(node, query.attribute));
       });
     }
@@ -96,9 +92,7 @@ MutationSummary.createQueryValidator = function(root, query) {
     function elementFilter(node) {
       if (node.nodeType != Node.ELEMENT_NODE)
         return false;
-      return query.elementFilter.some(function(pattern) {
-        return node[matchesSelector](pattern.selectorString);
-      });
+      return query.elementFilter.some(pattern => node[matchesSelector](pattern.selectorString));
     }
 
     function elementData(node) {
@@ -114,7 +108,7 @@ MutationSummary.createQueryValidator = function(root, query) {
         return data;
 
       data.attributes = {};
-      query.elementAttributes.forEach(function(attrName) {
+      query.elementAttributes.forEach(attrName => {
         data.attributes[attrName] = node.getAttribute(attrName);
       });
 
@@ -124,13 +118,13 @@ MutationSummary.createQueryValidator = function(root, query) {
     function elementValidator(summary, stayed, old, current) {
       var attributeChanged = {};
       if (query.elementAttributes) {
-        query.elementAttributes.forEach(function(attrName) {
+        query.elementAttributes.forEach(attrName => {
           attributeChanged[attrName] = [];
         });
       }
       var reparented = [];
 
-      stayed.forEach(function(node) {
+      stayed.forEach(node => {
         var oldData = old.get(node);
         var data = current.get(node);
 
@@ -140,7 +134,7 @@ MutationSummary.createQueryValidator = function(root, query) {
         if (!query.elementAttributes)
           return;
 
-        query.elementAttributes.forEach(function(attrName) {
+        query.elementAttributes.forEach(attrName => {
           if (oldData.attributes[attrName] != data.attributes[attrName])
             attributeChanged[attrName].push(node);
         });
@@ -150,11 +144,11 @@ MutationSummary.createQueryValidator = function(root, query) {
       if (!query.elementAttributes)
         return;
 
-      Object.keys(summary.attributeChanged).forEach(function(attrName) {
+      Object.keys(summary.attributeChanged).forEach(attrName => {
         compareNodeArrayIgnoreOrder(attributeChanged[attrName],
                                     summary.attributeChanged[attrName]);
 
-        attributeChanged[attrName].forEach(function(node) {
+        attributeChanged[attrName].forEach(node => {
           node(old.get(node).attributes[attrName], summary.getOldAttribute(node, attrName));
         });
       });
@@ -202,7 +196,7 @@ function Validator(root, includeFunc, dataFunc, validateFunc) {
 
     var stayed = [];
     var removed = [];
-    old.keys().forEach(function(node) {
+    old.keys().forEach(node => {
       if (currentCopy.has(node))
         stayed.push(node);
       else
