@@ -1,9 +1,8 @@
-<link rel="stylesheet" type="text/css" href="popup.css">
 <script src="jquery.js"></script>
 <script src="popup.js"></script>
-<input type="checkbox" id="up">
-<label for="up">U</label>
-<input type="checkbox" id="down">
-<label for="down">D</label>
-<input type="text" id="id">
-<input type="text" id="to">
+<link rel="stylesheet" type="text/css" href="popup.css">
+<form id="f">
+	<input type="checkbox" id="up" name="up"><label for="up">&uarr;</label><input type="checkbox" id="down" name="down"><label for="down">&darr;</label>
+	<input type="text" id="id" name="id" placeholder="Your Name" pattern="^[A-Za-z ]+$">
+	<input type="text" id="peer" name="peer" placeholder="Recipient Name" pattern="^[A-Za-z ]+$">
+</form>

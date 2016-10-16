@@ -1,4 +1,7 @@
-const server = "ws://127.0.0.1:1111"
+const server = "wss://jsonecho.herokuapp.com"
+const bg = chrome.extension.getBackgroundPage()
+// normalize ID
+const nz = id => id.toLowerCase().replace(" ", "_")
 var initiated = false
 
 WebSocket.prototype.sendJSON = function(m) { this.send(JSON.stringify(m)) }
@@ -9,9 +12,7 @@ $( () => {
     throw Error('PageMirror requires MutationObserver.');
   }
 
-  var tabId = Number(location.href.match(/\?tabId=([0-9]*$)/)[1]);
-  if (isNaN(tabId))
-    return;
+  let peer = location.href.match(/[?&]from=([^&]*)$/)[1];
 
   while (document.firstChild) {
     document.removeChild(document.firstChild);
@@ -27,10 +28,10 @@ $( () => {
 
   sock = new WebSocket(server);
   sock.onopen = () => {
-    sock.sendJSON({id: "joe"})
+    sock.sendJSON({id: nz(bg.id)})
     if (! initiated) {
       initiated = true
-      sock.sendJSON({to: "bob", begin: true})
+      sock.sendJSON({to: peer, begin: true})
     }
     sock.onmessage = (m) => {
       try { d = JSON.parse(m.data) }
