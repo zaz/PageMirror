@@ -40,6 +40,3 @@ However, because this example uses the MutationSummary, the number of DOM struct
 --Uninstallation--
 
 1. Click the 'Remove' button in PageMirror row on the chrome://extensions page.
-
-
-

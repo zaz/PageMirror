@@ -1747,4 +1747,3 @@ class MutationSummary {
     return summaries;
   }
 }
-
