@@ -1,8 +1,8 @@
 {
   "name": "PageMirror",
-  "version": "2",
+  "version": "0.1",
   "manifest_version": 2,
-  "description": "A Demonstration of miroring an entire document using DOM Mutation Observers and the Mutation Summary JavaScript library.",
+  "description": "Interactively share a page.",
   "icons": { "128": "icon_128.png" },
   "permissions": ["http://*/*", "https://*/*", "tabs"],
   "content_scripts": [
