@@ -4,10 +4,10 @@
   "manifest_version": 2,
   "description": "Interactively share a page.",
   "icons": { "128": "icon_128.png" },
-  "permissions": ["http://*/*", "https://*/*", "tabs"],
+  "permissions": ["*://*/*", "tabs"],
   "content_scripts": [
     {
-      "matches": ["http://*/*", "https://*/*"],
+      "matches": ["*://*/*"],
       "js": ["jquery.js", "mutation-summary.js", "tree-mirror.js", "content_script.js"]
     }
   ],
